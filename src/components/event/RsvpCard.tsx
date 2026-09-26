@@ -85,7 +85,7 @@ export function RsvpCard({
                   role="radio"
                   aria-checked={editing && status === key}
                   onClick={() => choose(key)}
-                  className="ev-choice group flex aspect-square flex-col items-center justify-center gap-1.5 rounded-full border border-(--ev-line)"
+                  className="ev-choice group flex min-h-28 flex-col items-center justify-center gap-2 rounded-3xl border-2 border-(--ev-line) px-2 py-4"
                 >
                   <span className="text-[clamp(1.75rem,6vw,2.5rem)] leading-none transition-transform duration-200 group-hover:-translate-y-0.5">{labels[key].emoji}</span>
                   <span className="text-sm font-semibold">{labels[key].text}</span>

@@ -96,10 +96,6 @@ export function newSection(type: SectionType): Section {
 export function defaultSections(): Section[] {
   return [
     newSection("details"),
-    {
-      ...(newSection("text") as Extract<Section, { type: "text" }>),
-      body: "Come celebrate with us! There will be cake, games, and lots of giggles.",
-    },
     { ...newSection("schedule"), enabled: false },
     newSection("guests"),
   ];

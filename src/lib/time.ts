@@ -59,7 +59,8 @@ export function formatEventDate(start: string | null, end: string | null, timeZo
     const sameDay = dateToZonedLocal(s, timeZone).slice(0, 10) === dateToZonedLocal(e, timeZone).slice(0, 10);
     times += sameDay ? ` – ${time(e)}` : ` – ${new Intl.DateTimeFormat("en-US", { timeZone, month: "short", day: "numeric" }).format(e)}, ${time(e)}`;
   }
-  return { day, times: `${times}${tz ? ` ${tz}` : ""}` };
+  const long = new Intl.DateTimeFormat("en-US", { timeZone, month: "long", day: "numeric", year: "numeric" }).format(s);
+  return { day, long, times: `${times}${tz ? ` ${tz}` : ""}` };
 }
 
 export const TIMEZONES = [

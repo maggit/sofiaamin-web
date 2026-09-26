@@ -1,24 +1,16 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { type EventView, type GuestSummary } from "@/lib/event";
 import { getTheme, themeStyle } from "@/lib/themes";
 import { formatEventDate } from "@/lib/time";
 import { getTitleFont } from "@/lib/title-fonts";
 import { Cover } from "./Cover";
-import { CalendarIcon } from "./Icons";
 import { SectionView } from "./Sections";
 import { Sprinkles } from "./Sprinkles";
 
-function googleCalendarUrl(event: EventView) {
-  if (!event.startsAt) return null;
-  const fmt = (iso: string) => iso.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  const end = event.endsAt ?? new Date(new Date(event.startsAt).getTime() + 3 * 3600_000).toISOString();
-  const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: event.title,
-    dates: `${fmt(event.startsAt)}/${fmt(end)}`,
-    location: [event.locationName, event.locationAddress].filter(Boolean).join(", "),
-  });
-  return `https://calendar.google.com/calendar/render?${params}`;
+/** "Sofia turns 3!" → ["Sofia", "turns 3!"]; the second line is drawn in the accent color. */
+function splitTitle(title: string): [string, string] {
+  const [first, ...rest] = title.trim().split(/\s+/);
+  return [first ?? "", rest.join(" ")];
 }
 
 export function EventPage({
@@ -41,7 +33,8 @@ export function EventPage({
   const theme = getTheme(event.theme);
   const font = getTitleFont(event.titleFont);
   const date = formatEventDate(event.startsAt, event.endsAt, event.timezone);
-  const gcal = googleCalendarUrl(event);
+  const [line1, line2] = splitTitle(event.title || "Untitled party");
+  const sections = event.sections.filter((s) => s.enabled);
 
   return (
     <div
@@ -50,38 +43,42 @@ export function EventPage({
     >
       <Sprinkles effect={event.effect} colors={theme.sprinkles} contained={contained} />
       {banner}
-      <main className={`relative mx-auto grid max-w-6xl gap-6 px-4 pb-24 @xl:px-6 @3xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] @3xl:grid-rows-[auto_auto_1fr] @3xl:gap-x-10 @3xl:gap-y-6 ${contained ? "pt-8" : "pt-10 @3xl:pt-20"}`}>
-        <div className="order-1 @3xl:col-start-2 @3xl:row-span-2 @3xl:row-start-1">
-          <Cover event={event} imageSrc={coverSrc} />
-        </div>
-
-        <header className="order-2 @3xl:col-start-1 @3xl:row-start-1">
-          <h1 className="ev-title text-[clamp(2.75rem,8.5cqi,5.25rem)] leading-[0.98]">{event.title || "Untitled party"}</h1>
-          {date ? (
-            <div className="mt-5 flex items-start gap-3">
-              <CalendarIcon className="mt-1.5 shrink-0 text-(--ev-accent)" width={24} height={24} />
-              <div>
-                <p className="text-xl font-semibold @xl:text-2xl">{date.day}</p>
-                <p className="text-(--ev-muted)">{date.times}</p>
-                <p className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                  <a href={`/e/${event.slug}/calendar.ics`} className="ev-link">Add to calendar</a>
-                  {gcal && <a href={gcal} target="_blank" rel="noreferrer" className="ev-link">Google Calendar</a>}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <p className="mt-5 text-xl text-(--ev-muted)">Date coming soon</p>
+      <main className={`relative mx-auto w-full max-w-[690px] px-4 pb-24 text-center @xl:px-6 ${contained ? "pt-8" : "pt-10 @3xl:pt-14"}`}>
+        <header>
+          <p className="text-xs font-extrabold tracking-[0.24em] text-(--ev-muted) uppercase">
+            You&rsquo;re invited{date && ` · ${date.long}`}
+          </p>
+          {event.badge && (
+            <p className="mt-6 inline-block -rotate-3 rounded-full bg-(--ev-ink) px-4 py-2 text-xs font-extrabold tracking-[0.13em] text-(--ev-on-ink) uppercase">
+              {event.badge}
+            </p>
+          )}
+          <h1 className="ev-title mt-6 text-[clamp(4rem,15cqi,7.4rem)] leading-[0.87]">
+            {line1}
+            {line2 && <span className="ev-title-accent block">{line2}</span>}
+          </h1>
+          {event.tagline && (
+            <p className="ev-tagline mt-4 text-[clamp(1.4rem,5cqi,2.1rem)] leading-tight">{event.tagline}</p>
           )}
         </header>
 
-        <div className="order-3 @3xl:col-start-2 @3xl:row-start-3">{rsvp}</div>
+        <div className="mt-6">
+          <Cover event={event} imageSrc={coverSrc} />
+        </div>
 
-        <div className="order-4 space-y-5 @3xl:col-start-1 @3xl:row-span-2 @3xl:row-start-2">
-          {event.sections
-            .filter((s) => s.enabled)
-            .map((s) => (
-              <SectionView key={s.id} section={s} event={event} summary={summary} />
-            ))}
+        {event.subtitle && (
+          <p className="mx-auto mt-6 max-w-[490px] text-[1.075rem] leading-relaxed whitespace-pre-line">{event.subtitle}</p>
+        )}
+
+        {/* RSVP sits right after the details panel (or first, if there isn't one). */}
+        <div className="mt-7 space-y-4 text-left">
+          {!sections.some((s) => s.type === "details") && rsvp}
+          {sections.map((s) => (
+            <Fragment key={s.id}>
+              <SectionView section={s} event={event} summary={summary} />
+              {s.type === "details" && rsvp}
+            </Fragment>
+          ))}
         </div>
       </main>
     </div>

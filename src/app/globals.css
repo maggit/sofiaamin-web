@@ -65,6 +65,20 @@ body {
   text-wrap: balance;
 }
 
+.ev-title-accent {
+  color: var(--ev-accent);
+  text-shadow: var(--ev-title-shadow);
+}
+
+.ev-tagline {
+  font-family: var(--ev-title-font);
+  font-variation-settings: var(--ev-title-settings);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ev-accent-2);
+  text-wrap: balance;
+}
+
 .ev-heading {
   font-family: var(--font-fraunces), serif;
   font-variation-settings: "SOFT" 100, "WONK" 0;

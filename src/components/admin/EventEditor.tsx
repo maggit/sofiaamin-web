@@ -25,6 +25,10 @@ type State = Omit<EventInput, "sections" | "rsvpSettings"> & {
 function initialState(e: EventView): State {
   return {
     title: e.title,
+    badge: e.badge,
+    tagline: e.tagline,
+    subtitle: e.subtitle,
+    arrivalNote: e.arrivalNote,
     slug: e.slug,
     status: e.status,
     startsLocal: dateToZonedLocal(e.startsAt, e.timezone) || null,
@@ -50,6 +54,10 @@ function toView(id: string, s: State): EventView {
     id,
     slug: s.slug,
     title: s.title,
+    badge: s.badge,
+    tagline: s.tagline,
+    subtitle: s.subtitle,
+    arrivalNote: s.arrivalNote,
     status: s.status,
     startsAt: iso(s.startsLocal),
     endsAt: iso(s.endsLocal),
@@ -219,7 +227,7 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
                 This date has passed, so the page will switch to inactive automatically. Change the date to keep it open.
               </p>
             )}
-            <Field label="Party name">
+            <Field label="Title" hint="The first word sits on its own line; the rest is highlighted.">
               {(fid) => (
                 <Input
                   id={fid}
@@ -255,6 +263,9 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
             </Field>
             <Field label="Location name">{(fid) => <Input id={fid} placeholder="Grandma's backyard" value={state.locationName} onChange={(e) => set("locationName", e.target.value)} />}</Field>
             <Field label="Address">{(fid) => <Input id={fid} placeholder="123 Main St, Brooklyn, NY" value={state.locationAddress} onChange={(e) => set("locationAddress", e.target.value)} />}</Field>
+            <Field label="Arrival instructions" hint="Shown under the party details.">
+              {(fid) => <TextArea id={fid} rows={3} placeholder="Ask the doorman for…" value={state.arrivalNote} onChange={(e) => set("arrivalNote", e.target.value)} />}
+            </Field>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Hosted by">{(fid) => <Input id={fid} placeholder="Mom & Dad" value={state.hostedBy} onChange={(e) => set("hostedBy", e.target.value)} />}</Field>
               <Field label="Spots" hint="Leave empty for unlimited">
@@ -263,6 +274,18 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
                 )}
               </Field>
             </div>
+          </Card>
+
+          <Card title="Invitation">
+            <Field label="Badge" hint="Optional pill above the title.">
+              {(fid) => <Input id={fid} placeholder="A pop star birthday" value={state.badge} onChange={(e) => set("badge", e.target.value)} />}
+            </Field>
+            <Field label="Tagline" hint="One line under the title.">
+              {(fid) => <Input id={fid} placeholder="The birthday concert of the year" value={state.tagline} onChange={(e) => set("tagline", e.target.value)} />}
+            </Field>
+            <Field label="Subtitle" hint="A short intro under the image.">
+              {(fid) => <TextArea id={fid} rows={3} placeholder="Join Sofia for…" value={state.subtitle} onChange={(e) => set("subtitle", e.target.value)} />}
+            </Field>
           </Card>
 
           <Card title="Look & feel">
@@ -322,12 +345,12 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
               </div>
             </div>
             <div>
-              <p className="mb-2 text-sm font-semibold">Cover</p>
+              <p className="mb-2 text-sm font-semibold">Image</p>
               <div className="flex items-center gap-4">
                 <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl border border-line text-4xl" style={{ background: THEMES[state.theme as keyof typeof THEMES]?.cover }}>
                   {state.coverImageId ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={`/api/images/${state.coverImageId}`} alt="" className="size-full object-cover" />
+                    <img src={`/api/images/${state.coverImageId}`} alt="" className="size-full object-contain" />
                   ) : (
                     state.coverEmoji
                   )}
@@ -336,7 +359,7 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
                   <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
                   <div className="flex flex-wrap gap-2">
                     <button type="button" disabled={uploading} onClick={() => fileRef.current?.click()} className="rounded-full border border-line px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap hover:bg-paper-2 disabled:opacity-50">
-                      {uploading ? "Uploading…" : state.coverImageId ? "Replace photo" : "Upload photo"}
+                      {uploading ? "Uploading…" : state.coverImageId ? "Replace image" : "Upload image"}
                     </button>
                     {state.coverImageId && (
                       <button type="button" onClick={() => set("coverImageId", null)} className="rounded-full px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-ink-soft hover:bg-paper-2">

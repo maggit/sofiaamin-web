@@ -11,6 +11,10 @@ export type EventTheme = {
   line: string;
   accent: string;
   accentInk: string;
+  /** Tagline color; defaults to the accent. */
+  accent2?: string;
+  /** Offset shadow behind the highlighted title line, if any. */
+  titleShadow?: string;
   /** Cover gradient when no photo is uploaded. */
   cover: string;
   /** Colors used by the floating effect layer. */
@@ -18,6 +22,21 @@ export type EventTheme = {
 };
 
 export const THEMES = {
+  popstar: {
+    name: "Pop Star",
+    mode: "light",
+    bg: "radial-gradient(circle at 10% 16%, #ffe4f0, transparent 32%), radial-gradient(circle at 90% 22%, #d8c8ff, transparent 31%), linear-gradient(160deg, #fff1f1, #fce9ff 55%, #e8f8ff)",
+    ink: "#281445",
+    muted: "#735c79",
+    card: "#fffdfdf2",
+    line: "#ebdce9",
+    accent: "#e63e9d",
+    accentInk: "#ffffff",
+    accent2: "#6940b7",
+    titleShadow: "3px 4px 0 #ffffff",
+    cover: "radial-gradient(circle at 50% 30%, #fff8d9 0, #ffb0df 31%, #ae84ed 68%, #593198 100%)",
+    sprinkles: ["#9c79e9", "#ffcc65", "#74d7dc", "#f46cae"],
+  },
   blush: {
     name: "Cotton Candy",
     mode: "light",
@@ -139,6 +158,9 @@ export function themeStyle(theme: EventTheme): CSSProperties {
     "--ev-line": theme.line,
     "--ev-accent": theme.accent,
     "--ev-accent-ink": theme.accentInk,
+    "--ev-accent-2": theme.accent2 ?? theme.accent,
+    "--ev-title-shadow": theme.titleShadow ?? "none",
+    "--ev-on-ink": theme.mode === "light" ? "#ffffff" : "oklch(20% 0.03 280)",
     "--ev-cover": theme.cover,
     colorScheme: theme.mode,
   } as CSSProperties;

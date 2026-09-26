@@ -6,6 +6,14 @@ export type EventView = {
   id: string;
   slug: string;
   title: string;
+  /** Small pill above the title, e.g. "A pop star birthday". */
+  badge: string;
+  /** One line under the title. */
+  tagline: string;
+  /** Intro paragraph under the cover image. */
+  subtitle: string;
+  /** Arrival instructions shown under the event details. */
+  arrivalNote: string;
   status: "active" | "inactive";
   startsAt: string | null;
   endsAt: string | null;
@@ -45,6 +53,10 @@ export function toView(row: EventRow): EventView {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    badge: row.badge,
+    tagline: row.tagline,
+    subtitle: row.subtitle,
+    arrivalNote: row.arrivalNote,
     status: row.status,
     startsAt: row.startsAt?.toISOString() ?? null,
     endsAt: row.endsAt?.toISOString() ?? null,

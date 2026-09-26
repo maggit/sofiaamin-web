@@ -25,6 +25,7 @@ export async function createEvent() {
     .values({
       slug: `party-${nanoid(6).toLowerCase().replace(/[^a-z0-9]/g, "x")}`,
       title: "Sofia's Birthday",
+      subtitle: "Come celebrate with us! There will be cake, games, and lots of giggles.",
       hostedBy: "",
       sections: defaultSections(),
       rsvpSettings: defaultRsvpSettings,
@@ -37,6 +38,10 @@ const localDate = z.string().max(20).nullable();
 
 const eventInput = z.object({
   title: z.string().trim().min(1, "Give the party a name.").max(140),
+  badge: z.string().trim().max(60),
+  tagline: z.string().trim().max(160),
+  subtitle: z.string().trim().max(1000),
+  arrivalNote: z.string().trim().max(1000),
   slug: z
     .string()
     .trim()
@@ -94,6 +99,10 @@ export async function saveEvent(id: string, input: EventInput): Promise<SaveResu
     .update(events)
     .set({
       title: d.title,
+      badge: d.badge,
+      tagline: d.tagline,
+      subtitle: d.subtitle,
+      arrivalNote: d.arrivalNote,
       slug: d.slug,
       status: d.status,
       startsAt,

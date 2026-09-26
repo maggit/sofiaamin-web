@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { mapsUrl, type EventView, type GuestSummary } from "@/lib/event";
 import type { Section } from "@/lib/sections";
-import { CrownIcon, PeopleIcon, PinIcon } from "./Icons";
+import { formatEventDate } from "@/lib/time";
+import { CalendarIcon, CrownIcon, PeopleIcon, PinIcon } from "./Icons";
 
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -40,22 +41,53 @@ function safeUrl(url: string) {
 
 function DetailRow({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
-    <li className="flex gap-4 py-3 first:pt-0 last:pb-0">
+    <li className="flex gap-4 py-4 first:pt-0 last:pb-0">
       <span className="mt-0.5 shrink-0 text-(--ev-accent)">{icon}</span>
       <div className="min-w-0">{children}</div>
     </li>
   );
 }
 
+function googleCalendarUrl(event: EventView) {
+  if (!event.startsAt) return null;
+  const fmt = (iso: string) => iso.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const end = event.endsAt ?? new Date(new Date(event.startsAt).getTime() + 3 * 3600_000).toISOString();
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${fmt(event.startsAt)}/${fmt(end)}`,
+    location: [event.locationName, event.locationAddress].filter(Boolean).join(", "),
+  });
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
+
 function Details({ event, summary }: { event: EventView; summary: GuestSummary }) {
   const maps = mapsUrl(event);
   const spotsTaken = summary.adults + summary.kids;
+  const date = formatEventDate(event.startsAt, event.endsAt, event.timezone);
+  const gcal = googleCalendarUrl(event);
   const rows: ReactNode[] = [];
+  rows.push(
+    <DetailRow key="date" icon={<CalendarIcon />}>
+      {date ? (
+        <>
+          <p className="ev-heading text-xl">{date.day}</p>
+          <p className="text-(--ev-muted)">{date.times}</p>
+          <p className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            <a href={`/e/${event.slug}/calendar.ics`} className="ev-link">Add to calendar</a>
+            {gcal && <a href={gcal} target="_blank" rel="noreferrer" className="ev-link">Google Calendar</a>}
+          </p>
+        </>
+      ) : (
+        <p className="ev-heading text-xl">Date coming soon</p>
+      )}
+    </DetailRow>,
+  );
   if (event.locationName || event.locationAddress) {
     rows.push(
       <DetailRow key="loc" icon={<PinIcon />}>
-        <p className="font-semibold">{event.locationName || event.locationAddress}</p>
-        {event.locationName && event.locationAddress && <p className="text-(--ev-muted)">{event.locationAddress}</p>}
+        <p className="ev-heading text-xl">{event.locationName || event.locationAddress}</p>
+        {event.locationName && event.locationAddress && <p className="whitespace-pre-line text-(--ev-muted)">{event.locationAddress}</p>}
         {maps && (
           <a href={maps} target="_blank" rel="noreferrer" className="ev-link mt-1 inline-block text-sm">
             Open in Maps
@@ -67,7 +99,7 @@ function Details({ event, summary }: { event: EventView; summary: GuestSummary }
   if (event.hostedBy) {
     rows.push(
       <DetailRow key="host" icon={<CrownIcon />}>
-        <p><span className="text-(--ev-muted)">Hosted by </span><span className="font-semibold">{event.hostedBy}</span></p>
+        <p className="ev-heading text-xl">Hosted by {event.hostedBy}</p>
       </DetailRow>,
     );
   }
@@ -79,10 +111,12 @@ function Details({ event, summary }: { event: EventView; summary: GuestSummary }
       </DetailRow>,
     );
   }
-  if (!rows.length) return null;
   return (
     <Panel>
       <ul className="divide-y divide-(--ev-line)">{rows}</ul>
+      {event.arrivalNote && (
+        <p className="mt-4 border-t border-(--ev-line) pt-4 text-sm leading-relaxed whitespace-pre-line text-(--ev-muted)">{event.arrivalNote}</p>
+      )}
     </Panel>
   );
 }
