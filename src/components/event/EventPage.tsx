@@ -4,7 +4,7 @@ import { getTheme, themeStyle } from "@/lib/themes";
 import { formatEventDate } from "@/lib/time";
 import { getTitleFont } from "@/lib/title-fonts";
 import { Cover } from "./Cover";
-import { SectionView } from "./Sections";
+import { Body, Panel, SectionView } from "./Sections";
 import { Sprinkles } from "./Sprinkles";
 
 /** "Sofia turns 3!" → ["Sofia", "turns 3!"]; the second line is drawn in the accent color. */
@@ -66,12 +66,13 @@ export function EventPage({
           <Cover event={event} imageSrc={coverSrc} />
         </div>
 
-        {event.subtitle && (
-          <p className="mx-auto mt-6 max-w-[490px] text-[1.075rem] leading-relaxed whitespace-pre-line">{event.subtitle}</p>
-        )}
-
         {/* RSVP sits right after the details panel (or first, if there isn't one). */}
         <div className="mt-7 space-y-4 text-left">
+          {event.subtitle && (
+            <Panel>
+              <Body text={event.subtitle} />
+            </Panel>
+          )}
           {!sections.some((s) => s.type === "details") && rsvp}
           {sections.map((s) => (
             <Fragment key={s.id}>

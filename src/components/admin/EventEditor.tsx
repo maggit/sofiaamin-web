@@ -283,8 +283,8 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
             <Field label="Tagline" hint="One line under the title.">
               {(fid) => <Input id={fid} placeholder="The birthday concert of the year" value={state.tagline} onChange={(e) => set("tagline", e.target.value)} />}
             </Field>
-            <Field label="Subtitle" hint="A short intro under the image.">
-              {(fid) => <TextArea id={fid} rows={3} placeholder="Join Sofia for…" value={state.subtitle} onChange={(e) => set("subtitle", e.target.value)} />}
+            <Field label="Intro" hint="A short note in a card above the details. Leave a blank line between paragraphs.">
+              {(fid) => <TextArea id={fid} rows={4} placeholder="Join Sofia for…" value={state.subtitle} onChange={(e) => set("subtitle", e.target.value)} />}
             </Field>
           </Card>
 

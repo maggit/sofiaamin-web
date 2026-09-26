@@ -17,7 +17,7 @@ function Heading({ children }: { children: ReactNode }) {
   return <h2 className="ev-heading mb-3 text-2xl leading-tight">{children}</h2>;
 }
 
-function Body({ text }: { text: string }) {
+export function Body({ text }: { text: string }) {
   return (
     <div className="space-y-3 text-[1.05rem] leading-relaxed text-(--ev-ink)/90">
       {text

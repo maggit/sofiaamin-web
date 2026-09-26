@@ -10,7 +10,7 @@ export type EventView = {
   badge: string;
   /** One line under the title. */
   tagline: string;
-  /** Intro paragraph under the cover image. */
+  /** Intro text shown in a card above the event details. */
   subtitle: string;
   /** Arrival instructions shown under the event details. */
   arrivalNote: string;
