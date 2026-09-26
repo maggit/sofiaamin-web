@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { rsvps } from "@/db/schema";
 import { rsvpClosedReason, rsvpCookieName, toView, type MyRsvp } from "@/lib/event";
 import { closeEndedEvents, getEventBySlug, guestSummary } from "@/lib/queries";
+import { siteOrigin } from "@/lib/origin";
 import { formatEventDate } from "@/lib/time";
 import { and, eq } from "drizzle-orm";
 
@@ -17,14 +18,16 @@ export async function generateMetadata({ params }: PageProps<"/e/[slug]">): Prom
   const e = toView(row);
   const date = formatEventDate(e.startsAt, e.endsAt, e.timezone);
   const description = [date && `${date.day}, ${date.times}`, e.locationName].filter(Boolean).join(" · ") || "You're invited!";
+  // Link previews only get an image when one was uploaded for that purpose. og:image must be an
+  // absolute URL, and the 1200x630 size lets WhatsApp and iMessage draw the large card.
+  const image = e.shareImageId
+    ? [{ url: `${await siteOrigin()}/api/images/${e.shareImageId}`, width: 1200, height: 630, type: "image/jpeg", alt: e.title }]
+    : undefined;
   return {
     title: e.title,
     description,
-    openGraph: {
-      title: e.title,
-      description,
-      images: e.coverImageId ? [`/api/images/${e.coverImageId}`] : undefined,
-    },
+    openGraph: { type: "website", siteName: "Sofia Amin", title: e.title, description, images: image },
+    twitter: { card: image ? "summary_large_image" : "summary", title: e.title, description, images: image?.map((i) => i.url) },
   };
 }
 

@@ -34,6 +34,8 @@ export const events = pgTable("events", {
   effect: text("effect").notNull().default("confetti"),
   titleFont: text("title_font").notNull().default("classic"),
   coverImageId: uuid("cover_image_id"),
+  /** 1200x630 JPEG used for link previews (WhatsApp, iMessage…). None by default. */
+  shareImageId: uuid("share_image_id"),
   coverEmoji: text("cover_emoji").notNull().default("🎂"),
   sections: jsonb("sections").$type<Section[]>().notNull().default([]),
   rsvpSettings: jsonb("rsvp_settings").$type<RsvpSettings>().notNull(),

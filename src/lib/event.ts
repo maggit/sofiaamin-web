@@ -26,6 +26,8 @@ export type EventView = {
   effect: string;
   titleFont: string;
   coverImageId: string | null;
+  /** Link-preview image (og:image); null means no preview image. */
+  shareImageId: string | null;
   coverEmoji: string;
   sections: Section[];
   rsvpSettings: RsvpSettings;
@@ -70,6 +72,7 @@ export function toView(row: EventRow): EventView {
     effect: row.effect,
     titleFont: row.titleFont,
     coverImageId: row.coverImageId,
+    shareImageId: row.shareImageId,
     coverEmoji: row.coverEmoji,
     sections: row.sections,
     rsvpSettings: row.rsvpSettings,

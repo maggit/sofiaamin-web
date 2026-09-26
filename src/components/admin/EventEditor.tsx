@@ -18,6 +18,7 @@ type State = Omit<EventInput, "sections" | "rsvpSettings"> & {
   rsvpSettings: EventView["rsvpSettings"];
   capacity: number | null;
   coverImageId: string | null;
+  shareImageId: string | null;
   startsLocal: string | null;
   endsLocal: string | null;
 };
@@ -42,6 +43,7 @@ function initialState(e: EventView): State {
     effect: e.effect,
     titleFont: e.titleFont,
     coverImageId: e.coverImageId,
+    shareImageId: e.shareImageId,
     coverEmoji: e.coverEmoji,
     sections: e.sections,
     rsvpSettings: { ...e.rsvpSettings, deadline: dateToZonedLocal(e.rsvpSettings.deadline, e.timezone) || null },
@@ -70,6 +72,7 @@ function toView(id: string, s: State): EventView {
     effect: s.effect,
     titleFont: s.titleFont,
     coverImageId: s.coverImageId,
+    shareImageId: s.shareImageId,
     coverEmoji: s.coverEmoji,
     sections: s.sections,
     rsvpSettings: { ...s.rsvpSettings, deadline: iso(s.rsvpSettings.deadline) },
@@ -108,6 +111,8 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
   const [tab, setTab] = useState<"edit" | "preview">("edit");
   const [adding, setAdding] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const shareRef = useRef<HTMLInputElement>(null);
+  const [sharing, setSharing] = useState(false);
 
   const dirty = JSON.stringify(state) !== JSON.stringify(saved);
   const view = useMemo(() => toView(id, state), [id, state]);
@@ -153,6 +158,25 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
     window.addEventListener("beforeunload", onLeave);
     return () => window.removeEventListener("beforeunload", onLeave);
   }, [dirty]);
+
+  const uploadShare = async (file: File) => {
+    setSharing(true);
+    setError(null);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("kind", "share");
+      const res = await fetch("/api/admin/images", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Upload failed");
+      set("shareImageId", json.id);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setSharing(false);
+      if (shareRef.current) shareRef.current.value = "";
+    }
+  };
 
   const upload = async (file: File) => {
     setUploading(true);
@@ -286,6 +310,35 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
             <Field label="Intro" hint="A short note in a card above the details. Leave a blank line between paragraphs.">
               {(fid) => <TextArea id={fid} rows={4} placeholder="Join Sofia for…" value={state.subtitle} onChange={(e) => set("subtitle", e.target.value)} />}
             </Field>
+          </Card>
+
+          <Card title="Link preview">
+            <p className="text-sm text-ink-soft">
+              The picture that shows when the link is shared in WhatsApp, iMessage and other apps. No picture is shown until you add one.
+              We size it to 1200 × 630 automatically; a wide image around that shape looks best.
+            </p>
+            <div className="flex flex-wrap items-start gap-4">
+              {state.shareImageId ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={`/api/images/${state.shareImageId}`} alt="Link preview image" className="aspect-[1200/630] w-56 rounded-xl border border-line object-cover" />
+              ) : (
+                <div className="grid aspect-[1200/630] w-56 place-items-center rounded-xl border border-dashed border-line text-xs text-ink-soft">No image</div>
+              )}
+              <div className="space-y-2">
+                <input ref={shareRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(e) => e.target.files?.[0] && uploadShare(e.target.files[0])} />
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" disabled={sharing} onClick={() => shareRef.current?.click()} className="rounded-full border border-line px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap hover:bg-paper-2 disabled:opacity-50">
+                    {sharing ? "Uploading…" : state.shareImageId ? "Replace image" : "Upload image"}
+                  </button>
+                  {state.shareImageId && (
+                    <button type="button" onClick={() => set("shareImageId", null)} className="rounded-full px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-ink-soft hover:bg-paper-2">
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-ink-soft">JPG, PNG, WebP or GIF, up to 5 MB. Apps cache previews, so a new image can take a while to show on links already shared.</p>
+              </div>
+            </div>
           </Card>
 
           <Card title="Look & feel">
