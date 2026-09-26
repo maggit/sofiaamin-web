@@ -43,7 +43,7 @@ export default function Home() {
       </main>
 
       <footer className={s.bottom}>
-        <div className={s.location}>Brooklyn, New York</div>
+        <div className={s.location}>Brooklyn, New York 2026</div>
       </footer>
     </div>
   );
