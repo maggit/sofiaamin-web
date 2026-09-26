@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { logout } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/admin";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
+export const viewport: Viewport = { themeColor: "#a9b4ed" };
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const session = await requireAdmin();
   return (
-    <div className="min-h-dvh bg-paper">
-      <header className="sticky top-0 z-30 border-b border-line bg-paper/85 backdrop-blur-md">
+    <div className="min-h-dvh bg-sky-page">
+      <header className="sticky top-0 z-30 border-b border-line bg-sky-page/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6">
           <Link href="/admin" className="font-display text-xl font-medium whitespace-nowrap [font-variation-settings:'SOFT'_100,'WONK'_1]">
             Sofia&rsquo;s parties

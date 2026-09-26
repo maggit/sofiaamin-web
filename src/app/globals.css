@@ -8,13 +8,10 @@
   --ink-soft: oklch(47% 0.05 350);
   --rose: oklch(66% 0.15 8);
   --rose-deep: oklch(56% 0.16 8);
-  --blob-peach: oklch(88% 0.075 55);
-  --blob-blush: oklch(87% 0.07 10);
-  --blob-lilac: oklch(86% 0.065 305);
-  --blob-butter: oklch(94% 0.07 95);
   --butter: oklch(95% 0.06 95);
   --line: oklch(31% 0.075 350 / 0.12);
   --focus: oklch(56% 0.16 8);
+  --sky: #a9b4ed; /* landing page sky, also behind admin */
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -29,6 +26,7 @@
   --color-rose-deep: var(--rose-deep);
   --color-line: var(--line);
   --color-butter: var(--butter);
+  --color-sky-page: var(--sky);
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-figtree);
 }
@@ -47,61 +45,6 @@ body {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-}
-
-/* ───────────── Landing ───────────── */
-
-.landing {
-  position: relative;
-  isolation: isolate;
-  min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: var(--paper);
-}
-
-.landing::after {
-  /* paper grain */
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  opacity: 0.35;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.4 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.blob {
-  position: absolute;
-  z-index: -2;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.85;
-  animation: drift var(--t, 26s) var(--ease-in-out) infinite alternate;
-}
-.blob-1 { width: 46vmax; height: 46vmax; left: -12vmax; top: -14vmax; background: var(--blob-peach); --t: 28s; }
-.blob-2 { width: 40vmax; height: 40vmax; right: -12vmax; top: 8vh; background: var(--blob-lilac); --t: 33s; animation-delay: -8s; }
-.blob-3 { width: 36vmax; height: 36vmax; left: 18vw; bottom: -18vmax; background: var(--blob-blush); --t: 24s; animation-delay: -4s; }
-.blob-4 { width: 22vmax; height: 22vmax; right: 22vw; bottom: 6vh; background: var(--blob-butter); --t: 30s; animation-delay: -14s; }
-
-@keyframes drift {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(4vmax, 3vmax, 0) scale(1.08); }
-  100% { transform: translate3d(-3vmax, 5vmax, 0) scale(0.96); }
-}
-
-@media (prefers-color-scheme: dark) {
-  .landing {
-    --paper: oklch(21% 0.035 320);
-    --ink: oklch(94% 0.025 60);
-    --rose-deep: oklch(80% 0.1 10);
-    --blob-peach: oklch(42% 0.09 40);
-    --blob-blush: oklch(38% 0.1 355);
-    --blob-lilac: oklch(36% 0.09 300);
-    --blob-butter: oklch(45% 0.07 80);
-  }
-  .landing::after { mix-blend-mode: screen; opacity: 0.12; }
 }
 
 /* ───────────── Event pages ───────────── */
@@ -237,7 +180,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blob, .cover-emoji { animation: none; }
+  .cover-emoji { animation: none; }
   .sprinkle { animation: none; opacity: 0.35; }
   .sprinkle-confetti, .sprinkle-petals, .sprinkle-bubbles, .sprinkle-hearts { top: auto; bottom: calc(var(--size) * 3); }
 }

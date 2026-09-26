@@ -170,7 +170,7 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
   return (
     <div className="mx-auto max-w-[1600px]">
       {/* Toolbar */}
-      <div className="sticky top-14 z-20 flex flex-wrap items-center gap-2 border-b border-line bg-paper/90 px-4 py-2.5 backdrop-blur-md sm:px-6">
+      <div className="sticky top-14 z-20 flex flex-wrap items-center gap-2 border-b border-line bg-sky-page/90 px-4 py-2.5 backdrop-blur-md sm:px-6">
         <Link href="/admin" className="mr-1 text-sm font-semibold whitespace-nowrap text-ink-soft hover:text-ink">← Parties</Link>
         <div className="flex rounded-full border border-line p-0.5 text-sm font-semibold lg:hidden" role="tablist">
           {(["edit", "preview"] as const).map((t) => (

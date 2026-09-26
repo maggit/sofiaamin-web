@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { redirect } from "next/navigation";
 import { auth, devLoginEnabled, isAdminEmail, signIn } from "@/auth";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
+export const viewport: Viewport = { themeColor: "#a9b4ed" };
 
 export default async function Login({ searchParams }: PageProps<"/admin/login">) {
   const session = await auth();
@@ -10,9 +11,7 @@ export default async function Login({ searchParams }: PageProps<"/admin/login">)
   const { error } = await searchParams;
 
   return (
-    <main className="landing px-4">
-      <span className="blob blob-1" aria-hidden />
-      <span className="blob blob-3" aria-hidden />
+    <main className="grid min-h-dvh place-items-center bg-sky-page px-4">
       <div className="w-full max-w-sm rounded-[2rem] border border-line bg-white/70 p-8 text-center shadow-[0_30px_80px_-50px_rgb(0_0_0/0.5)] backdrop-blur-md">
         <p className="font-display text-4xl [font-variation-settings:'SOFT'_100,'WONK'_1]">Sofia Amin</p>
         <p className="mt-2 text-ink-soft">Party headquarters</p>
