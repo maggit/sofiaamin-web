@@ -11,12 +11,6 @@ export const viewport: Viewport = { themeColor: "#a9b4ed" };
 export default function Home() {
   return (
     <div className={s.page}>
-      <header className={s.top}>
-        <div className={s.mark}>
-          sofia<span className={s.asterisk}>✳</span>
-        </div>
-      </header>
-
       <main className={s.main}>
         <h1 className={s.name}>
           <span>Sofia</span>

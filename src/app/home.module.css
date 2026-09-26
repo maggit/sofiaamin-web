@@ -19,10 +19,9 @@
   font-family: var(--sans);
 }
 
-.top,
 .bottom {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 16px;
   font-size: clamp(11px, 1vw, 14px);
@@ -30,15 +29,6 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
-.top { position: relative; z-index: 2; }
-.mark {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(21px, 2vw, 30px);
-  letter-spacing: -0.06em;
-  text-transform: none;
-}
-.asterisk { color: var(--cream); font-style: normal; margin-left: 2px; }
 
 .main {
   flex: 1;
@@ -76,7 +66,7 @@
 .face { transform-origin: 50% 55%; animation: bob 5s ease-in-out infinite; }
 .eyes { transform-origin: center; transform-box: fill-box; animation: blink 6s infinite; }
 
-.bottom { justify-content: flex-end; padding-top: 18px; }
+.bottom { padding-top: 18px; }
 .location { text-align: right; line-height: 1.5; }
 
 @keyframes float { 50% { transform: translateY(-11px) rotate(1.5deg); } }
