@@ -20,7 +20,8 @@ const input = z.object({
   status: z.enum(["going", "maybe", "no"]),
   adults: count.default(1),
   kids: count.default(0),
-  contact: z.string().trim().max(200).default(""),
+  email: z.string().trim().max(200).regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "That email doesn't look right.").or(z.literal("")).default(""),
+  phone: z.string().trim().max(40).default(""),
   note: z.string().trim().max(1000).default(""),
   website: z.string().max(0).optional(), // honeypot
 });
@@ -41,8 +42,11 @@ export async function submitRsvp(_prev: RsvpState, formData: FormData): Promise<
   const adults = s.askCounts && data.status !== "no" ? data.adults : data.status === "no" ? 0 : 1;
   const kids = s.askCounts && data.status !== "no" ? data.kids : 0;
   if (data.status !== "no" && adults + kids === 0) return { ok: false, error: "Add at least one guest." };
-  const contact = s.askContact ? data.contact : "";
-  if (s.askContact && s.contactRequired && data.status !== "no" && !contact) {
+  const askContact = s.askContact && data.status !== "no";
+  const email = askContact ? data.email : "";
+  const phone = askContact ? data.phone : "";
+  if (phone && phone.replace(/\D/g, "").length < 7) return { ok: false, error: "That phone number doesn't look right." };
+  if (askContact && s.contactRequired && !email && !phone) {
     return { ok: false, error: "Please add a phone number or email so we can send updates." };
   }
 
@@ -64,7 +68,7 @@ export async function submitRsvp(_prev: RsvpState, formData: FormData): Promise<
     }
   }
 
-  const values = { name: data.name, status: data.status, adults, kids, contact, note: s.askNote ? data.note : "", updatedAt: new Date() };
+  const values = { name: data.name, status: data.status, adults, kids, email, phone, note: s.askNote ? data.note : "", updatedAt: new Date() };
   if (existing) {
     await db.update(rsvps).set(values).where(eq(rsvps.id, existing.id));
   } else {

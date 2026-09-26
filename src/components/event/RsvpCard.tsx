@@ -109,18 +109,19 @@ export function RsvpCard({
                   </>
                 )}
                 {settings.askContact && status !== "no" && (
-                  <label className="block">
-                    <span className="sr-only">Phone or email</span>
-                    <input
-                      name="contact"
-                      maxLength={200}
-                      defaultValue={mine?.contact}
-                      required={settings.contactRequired}
-                      placeholder={`Phone or email${settings.contactRequired ? "" : " (optional)"}`}
-                      autoComplete="email"
-                      className="ev-input"
-                    />
-                  </label>
+                  <>
+                    <label className="block">
+                      <span className="sr-only">Email</span>
+                      <input name="email" type="email" maxLength={200} defaultValue={mine?.email} placeholder="Email" autoComplete="email" className="ev-input" />
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Phone</span>
+                      <input name="phone" type="tel" maxLength={40} defaultValue={mine?.phone} placeholder="Phone" autoComplete="tel" className="ev-input" />
+                    </label>
+                    <p className="text-xs text-(--ev-muted)">
+                      {settings.contactRequired ? "Add an email, a phone number, or both, so we can send updates." : "Optional. Add an email, a phone number, or both, in case of updates."}
+                    </p>
+                  </>
                 )}
                 {settings.askNote && (
                   <label className="block">

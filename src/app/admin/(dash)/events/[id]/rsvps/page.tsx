@@ -54,13 +54,14 @@ export default async function RsvpsPage({ params }: PageProps<"/admin/events/[id
         </p>
       ) : (
         <div className="overflow-x-auto rounded-3xl border border-line bg-white/60">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-line text-ink-soft">
               <tr>
                 <th className="px-4 py-3 font-semibold">Guest</th>
                 <th className="px-4 py-3 font-semibold">Answer</th>
                 <th className="px-4 py-3 font-semibold">Party size</th>
-                <th className="px-4 py-3 font-semibold">Contact</th>
+                <th className="px-4 py-3 font-semibold">Email</th>
+                <th className="px-4 py-3 font-semibold">Phone</th>
                 <th className="px-4 py-3 font-semibold">Note</th>
                 <th className="px-4 py-3"><span className="sr-only">Actions</span></th>
               </tr>
@@ -73,7 +74,8 @@ export default async function RsvpsPage({ params }: PageProps<"/admin/events/[id
                   <td className="px-4 py-3 whitespace-nowrap tabular-nums">
                     {r.status === "no" ? "—" : `${r.adults} adult${r.adults === 1 ? "" : "s"}${r.kids ? `, ${r.kids} kid${r.kids === 1 ? "" : "s"}` : ""}`}
                   </td>
-                  <td className="px-4 py-3 break-all">{r.contact || <span className="text-ink-soft">—</span>}</td>
+                  <td className="px-4 py-3 break-all">{r.email || <span className="text-ink-soft">—</span>}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">{r.phone || <span className="text-ink-soft">—</span>}</td>
                   <td className="max-w-xs px-4 py-3 whitespace-pre-line">{r.note || <span className="text-ink-soft">—</span>}</td>
                   <td className="px-4 py-3 text-right">
                     <form action={deleteRsvp.bind(null, id, r.id)}>

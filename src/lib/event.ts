@@ -44,7 +44,8 @@ export type MyRsvp = {
   status: "going" | "maybe" | "no";
   adults: number;
   kids: number;
-  contact: string;
+  email: string;
+  phone: string;
   note: string;
 } | null;
 

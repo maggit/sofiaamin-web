@@ -430,9 +430,9 @@ export function EventEditor({ id, event, summary, origin }: { id: string; event:
 
           <Card title="RSVP" defaultOpen={false}>
             <Toggle label="Ask how many adults & kids" checked={state.rsvpSettings.askCounts} onChange={(v) => setRsvp("askCounts", v)} />
-            <Toggle label="Ask for phone or email" checked={state.rsvpSettings.askContact} onChange={(v) => setRsvp("askContact", v)} />
+            <Toggle label="Ask for email and phone" checked={state.rsvpSettings.askContact} onChange={(v) => setRsvp("askContact", v)} />
             {state.rsvpSettings.askContact && (
-              <Toggle label="Contact is required" hint="Guests can't RSVP yes or maybe without it." checked={state.rsvpSettings.contactRequired} onChange={(v) => setRsvp("contactRequired", v)} />
+              <Toggle label="Require an email or phone" hint="Guests can't RSVP yes or maybe without at least one." checked={state.rsvpSettings.contactRequired} onChange={(v) => setRsvp("contactRequired", v)} />
             )}
             <Toggle label="Let guests leave a note" checked={state.rsvpSettings.askNote} onChange={(v) => setRsvp("askNote", v)} />
             {state.rsvpSettings.askNote && (

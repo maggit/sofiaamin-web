@@ -18,8 +18,8 @@ export async function GET(_req: Request, { params }: RouteContext<"/admin/events
   if (!event) return new Response("Not found", { status: 404 });
   const rows = await db.select().from(rsvps).where(eq(rsvps.eventId, id)).orderBy(asc(rsvps.createdAt));
   const lines = [
-    ["Name", "Answer", "Adults", "Kids", "Contact", "Note", "Responded"],
-    ...rows.map((r) => [r.name, r.status, r.adults, r.kids, r.contact, r.note, r.updatedAt.toISOString()]),
+    ["Name", "Answer", "Adults", "Kids", "Email", "Phone", "Note", "Responded"],
+    ...rows.map((r) => [r.name, r.status, r.adults, r.kids, r.email, r.phone, r.note, r.updatedAt.toISOString()]),
   ].map((l) => l.map(cell).join(","));
   return new Response(lines.join("\r\n"), {
     headers: {

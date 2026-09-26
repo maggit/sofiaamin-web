@@ -38,7 +38,7 @@ export default async function EventRoute({ params }: PageProps<"/e/[slug]">) {
   const token = (await cookies()).get(rsvpCookieName(event.id))?.value;
   const [mine] = token
     ? await db
-        .select({ name: rsvps.name, status: rsvps.status, adults: rsvps.adults, kids: rsvps.kids, contact: rsvps.contact, note: rsvps.note })
+        .select({ name: rsvps.name, status: rsvps.status, adults: rsvps.adults, kids: rsvps.kids, email: rsvps.email, phone: rsvps.phone, note: rsvps.note })
         .from(rsvps)
         .where(and(eq(rsvps.eventId, event.id), eq(rsvps.editToken, token)))
         .limit(1)
