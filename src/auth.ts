@@ -14,6 +14,8 @@ export function isAdminEmail(email: string | null | undefined) {
   return !!email && adminEmails().includes(email.toLowerCase());
 }
 
+export const NOT_ALLOWED_PATH = "/admin/not-allowed";
+
 const providers: Provider[] = [Google];
 
 // Local-only shortcut so the admin can be exercised without Google credentials.
@@ -36,11 +38,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   pages: { signIn: "/admin/login", error: "/admin/login" },
   callbacks: {
+    // No adapter + JWT sessions: nothing is stored for anyone. Anyone off the
+    // allowlist gets no session cookie and is sent to the not-allowed page.
     signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
-        return profile?.email_verified === true && isAdminEmail(profile.email);
-      }
-      return devLoginEnabled && isAdminEmail(user.email);
+      const allowed =
+        account?.provider === "google"
+          ? profile?.email_verified === true && isAdminEmail(profile.email)
+          : devLoginEnabled && isAdminEmail(user.email);
+      return allowed || NOT_ALLOWED_PATH;
     },
   },
 });

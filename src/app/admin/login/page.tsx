@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { redirect } from "next/navigation";
-import { auth, devLoginEnabled, isAdminEmail, signIn } from "@/auth";
+import { auth, devLoginEnabled, isAdminEmail, NOT_ALLOWED_PATH, signIn } from "@/auth";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 export const viewport: Viewport = { themeColor: "#a9b4ed" };
@@ -9,6 +9,7 @@ export default async function Login({ searchParams }: PageProps<"/admin/login">)
   const session = await auth();
   if (isAdminEmail(session?.user?.email)) redirect("/admin");
   const { error } = await searchParams;
+  if (error === "AccessDenied") redirect(NOT_ALLOWED_PATH);
 
   return (
     <main className="grid min-h-dvh place-items-center bg-sky-page px-4">
@@ -17,7 +18,7 @@ export default async function Login({ searchParams }: PageProps<"/admin/login">)
         <p className="mt-2 text-ink-soft">Party headquarters</p>
         {error && (
           <p role="alert" className="mt-5 rounded-2xl bg-rose/10 px-4 py-3 text-sm font-medium text-rose-deep">
-            {error === "AccessDenied" ? "That Google account isn't on the guest list for admin." : "Sign-in didn't work. Try again?"}
+            Sign-in didn&rsquo;t work. Try again?
           </p>
         )}
         <form
