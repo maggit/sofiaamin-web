@@ -1,24 +1,64 @@
-const WORDS = ["Sofia", "Amin"];
+import type { Metadata, Viewport } from "next";
+import s from "./home.module.css";
+
+export const metadata: Metadata = {
+  title: { absolute: "Sofia Amin ✳" },
+  description: "A little world of Sofia's own.",
+};
+
+export const viewport: Viewport = { themeColor: "#a9b4ed" };
 
 export default function Home() {
-  let i = 0;
   return (
-    <main className="landing">
-      <span className="blob blob-1" aria-hidden />
-      <span className="blob blob-2" aria-hidden />
-      <span className="blob blob-3" aria-hidden />
-      <span className="blob blob-4" aria-hidden />
-      <h1 className="name" aria-label="Sofia Amin">
-        {WORDS.map((word) => (
-          <span key={word} className="word" aria-hidden>
-            {[...word].map((ch) => (
-              <span key={i} className="l" style={{ "--i": i++ } as React.CSSProperties}>
-                {ch}
-              </span>
-            ))}
-          </span>
-        ))}
-      </h1>
-    </main>
+    <div className={s.page}>
+      <header className={s.top}>
+        <div className={s.mark}>
+          sofia<span className={s.asterisk}>✳</span>
+        </div>
+        <div className={s.right}>A little world of her own</div>
+      </header>
+
+      <main className={s.main}>
+        <p className={s.eyebrow}>Hello, world. Meet</p>
+        <h1 className={s.name}>
+          <span>Sofia</span>
+          <span>Amin</span>
+        </h1>
+        <div className={s.character} role="img" aria-label="A friendly little cream cloud with rosy cheeks and a smile">
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g className={s.face}>
+              <path
+                d="M72 192C34 190 20 160 32 134c10-22 31-29 53-25C77 70 106 43 141 48c19 2 33 12 42 26 16-39 65-48 94-20 13 12 18 26 18 39 32-8 66 14 68 47 2 26-15 46-38 51-5 37-36 64-74 64H139c-37 0-65-23-67-63Z"
+                fill="var(--cream)"
+                stroke="var(--ink)"
+                strokeWidth="6"
+                strokeLinejoin="round"
+              />
+              <ellipse cx="125" cy="167" rx="23" ry="13" fill="var(--pink)" opacity=".7" />
+              <ellipse cx="279" cy="167" rx="23" ry="13" fill="var(--pink)" opacity=".7" />
+              <g className={s.eyes} fill="var(--ink)">
+                <ellipse cx="159" cy="151" rx="6" ry="10" />
+                <ellipse cx="242" cy="151" rx="6" ry="10" />
+              </g>
+              <path d="M185 171q15 18 31 0" fill="none" stroke="var(--ink)" strokeWidth="5" strokeLinecap="round" />
+            </g>
+            <path d="m65 38 5 12 12 5-12 5-5 12-5-12-12-5 12-5Z" fill="#f7ca58" />
+            <path d="m335 42 4 10 10 4-10 4-4 10-4-10-10-4 10-4Z" fill="var(--pink)" />
+            <circle cx="38" cy="209" r="6" fill="var(--blue)" />
+            <circle cx="358" cy="215" r="7" fill="#f7ca58" />
+          </svg>
+        </div>
+        <p className={s.tagline}>bright skies ahead.</p>
+      </main>
+
+      <footer className={s.bottom}>
+        <div className={s.number}>03</div>
+        <div className={s.location}>
+          Brooklyn, New York
+          <br />
+          Est. 2023
+        </div>
+      </footer>
+    </div>
   );
 }

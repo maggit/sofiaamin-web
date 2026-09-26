@@ -30,6 +30,7 @@ Cover photos are stored in Postgres, so the app container is stateless.
 cp .env.example .env.local   # fill in values (DEV_LOGIN_EMAIL lets you skip Google locally)
 npm install
 npm run db:up                # Postgres in Docker on port 5434
+npm run db:migrate          # optional: the dev server also migrates on start
 npm run dev
 ```
 

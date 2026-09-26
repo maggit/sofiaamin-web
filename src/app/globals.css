@@ -1,4 +1,3 @@
-/* Hallmark · macrostructure: Single Word (name as the whole page) · tone: soft & whimsical · anchor hue: plum-rose 350 */
 @import "tailwindcss";
 
 :root {
@@ -90,42 +89,6 @@ body {
   0% { transform: translate3d(0, 0, 0) scale(1); }
   50% { transform: translate3d(4vmax, 3vmax, 0) scale(1.08); }
   100% { transform: translate3d(-3vmax, 5vmax, 0) scale(0.96); }
-}
-
-.name {
-  margin: 0;
-  padding: 0 1rem;
-  text-align: center;
-  font-family: var(--font-fraunces), serif;
-  font-weight: 420;
-  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
-  font-size: clamp(3.75rem, 15vw, 12.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-.name .word { display: inline-block; white-space: nowrap; }
-.name .word + .word { margin-left: 0.22em; }
-.name .l {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.35em);
-  animation: rise 1100ms var(--ease-out) forwards;
-  animation-delay: calc(180ms + var(--i) * 70ms);
-  transition: transform 500ms var(--ease-out), color 400ms var(--ease-out);
-}
-.name .l:hover { transform: translateY(-0.08em) rotate(-4deg); color: var(--rose-deep); }
-
-@keyframes rise {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 640px) {
-  .name { font-size: clamp(3.75rem, 27vw, 8rem); }
-  .name .word { display: block; }
-  .name .word + .word { margin-left: 0; }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -275,7 +238,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .blob, .cover-emoji { animation: none; }
-  .name .l { animation: rise 150ms linear forwards; animation-delay: 0ms; transform: none; }
   .sprinkle { animation: none; opacity: 0.35; }
   .sprinkle-confetti, .sprinkle-petals, .sprinkle-bubbles, .sprinkle-hearts { top: auto; bottom: calc(var(--size) * 3); }
 }
