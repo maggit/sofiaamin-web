@@ -15,11 +15,9 @@ export default function Home() {
         <div className={s.mark}>
           sofia<span className={s.asterisk}>✳</span>
         </div>
-        <div className={s.right}>A little world of her own</div>
       </header>
 
       <main className={s.main}>
-        <p className={s.eyebrow}>Hello, world. Meet</p>
         <h1 className={s.name}>
           <span>Sofia</span>
           <span>Amin</span>
@@ -48,16 +46,10 @@ export default function Home() {
             <circle cx="358" cy="215" r="7" fill="#f7ca58" />
           </svg>
         </div>
-        <p className={s.tagline}>bright skies ahead.</p>
       </main>
 
       <footer className={s.bottom}>
-        <div className={s.number}>03</div>
-        <div className={s.location}>
-          Brooklyn, New York
-          <br />
-          Est. 2023
-        </div>
+        <div className={s.location}>Brooklyn, New York</div>
       </footer>
     </div>
   );
