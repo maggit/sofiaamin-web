@@ -9,7 +9,7 @@ const SHARE_H = 630;
  * is shown whole on a blurred copy of itself so nothing important gets cropped.
  */
 export async function toShareImage(input: Buffer) {
-  const src = sharp(input, { failOn: "none" }).rotate().flatten({ background: "#ffffff" });
+  const src = sharp(input, { failOn: "none", limitInputPixels: 50_000_000 }).rotate().flatten({ background: "#ffffff" });
   const { width = 0, height = 0 } = await src.metadata();
   if (!width || !height) throw new Error("bad image");
   const ratio = width / height;

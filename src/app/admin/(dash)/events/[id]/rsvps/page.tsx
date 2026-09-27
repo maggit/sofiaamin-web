@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 import { deleteRsvp } from "@/app/admin/actions";
 import { db } from "@/db";
 import { rsvps } from "@/db/schema";
+import { requireAdmin } from "@/lib/admin";
 import { getEventById } from "@/lib/queries";
 
 const ORDER = { going: 0, maybe: 1, no: 2 } as const;
 
 export default async function RsvpsPage({ params }: PageProps<"/admin/events/[id]/rsvps">) {
+  await requireAdmin();
   const { id } = await params;
   const event = await getEventById(id);
   if (!event) notFound();

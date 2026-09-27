@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, ne } from "drizzle-orm";
+import { and, count as countRows, eq, ne } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -11,6 +11,8 @@ import { rsvpClosedReason, rsvpCookieName, toView } from "@/lib/event";
 import { getEventBySlug } from "@/lib/queries";
 
 export type RsvpState = { ok: boolean; error?: string; at?: number };
+
+const MAX_RSVPS_PER_EVENT = 1000;
 
 const count = z.coerce.number().int().min(0).max(20);
 
@@ -55,6 +57,12 @@ export async function submitRsvp(_prev: RsvpState, formData: FormData): Promise<
   const [existing] = token
     ? await db.select().from(rsvps).where(and(eq(rsvps.eventId, event.id), eq(rsvps.editToken, token))).limit(1)
     : [];
+
+  // Backstop against bots flooding the table; real guest lists are far smaller.
+  if (!existing) {
+    const [{ n }] = await db.select({ n: countRows() }).from(rsvps).where(eq(rsvps.eventId, event.id));
+    if (n >= MAX_RSVPS_PER_EVENT) return { ok: false, error: "This party isn't taking more RSVPs online. Please reach out to the host." };
+  }
 
   if (data.status === "going" && event.capacity) {
     const others = await db

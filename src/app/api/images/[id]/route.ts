@@ -10,6 +10,7 @@ export async function GET(_req: Request, { params }: RouteContext<"/api/images/[
   return new Response(new Uint8Array(img.data), {
     headers: {
       "Content-Type": img.contentType,
+      "X-Content-Type-Options": "nosniff",
       // Images are immutable: a new upload always gets a new id.
       "Cache-Control": "public, max-age=31536000, immutable",
     },

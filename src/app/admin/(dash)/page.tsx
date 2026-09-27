@@ -3,11 +3,13 @@ import Link from "next/link";
 import { createEvent, setEventStatus } from "@/app/admin/actions";
 import { db } from "@/db";
 import { events, rsvps } from "@/db/schema";
+import { requireAdmin } from "@/lib/admin";
 import { closeEndedEvents } from "@/lib/queries";
 import { getTheme } from "@/lib/themes";
 import { formatEventDate } from "@/lib/time";
 
 export default async function AdminHome() {
+  await requireAdmin();
   await closeEndedEvents();
   const rows = await db
     .select({

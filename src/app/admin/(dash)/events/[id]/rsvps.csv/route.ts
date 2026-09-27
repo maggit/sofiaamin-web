@@ -7,7 +7,7 @@ import { getEventById } from "@/lib/queries";
 // Quote every cell and neutralise spreadsheet formulas.
 const cell = (v: string | number) => {
   const s = String(v);
-  return `"${(/^[=+\-@]/.test(s) ? `'${s}` : s).replace(/"/g, '""')}"`;
+  return `"${(/^[=+\-@\t\r]/.test(s) ? `'${s}` : s).replace(/"/g, '""')}"`;
 };
 
 export async function GET(_req: Request, { params }: RouteContext<"/admin/events/[id]/rsvps.csv">) {
